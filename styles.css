@@ -1,0 +1,269 @@
+:root {
+  font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color-scheme: light dark;
+  --bg: #f5f7fb;
+  --card-bg: #ffffff;
+  --primary: #5865f2;
+  --success: #2ecc71;
+  --text: #1f2933;
+  --muted: #52606d;
+  --shadow: rgba(15, 23, 42, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header,
+.app-footer {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.app-header {
+  background: linear-gradient(135deg, #6b8bff, #9b6bff);
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(107, 139, 255, 0.35);
+}
+
+.app-header h1 {
+  font-size: 2.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.app-header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.app-main {
+  flex: 1;
+  width: min(960px, 90vw);
+  margin: -3rem auto 2rem auto;
+  background: var(--card-bg);
+  padding: 2.5rem;
+  border-radius: 24px;
+  box-shadow: 0 20px 50px var(--shadow);
+  display: grid;
+  gap: 2rem;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.controls label {
+  font-weight: 600;
+}
+
+select,
+button {
+  border-radius: 12px;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  cursor: pointer;
+}
+
+select {
+  background: #eef2ff;
+  color: var(--text);
+}
+
+button.primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+button.secondary {
+  background: #e2e8f0;
+  color: var(--text);
+}
+
+button.success {
+  background: var(--success);
+  color: #fff;
+}
+
+button:hover,
+select:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(15, 23, 42, 0.18);
+}
+
+.flashcard {
+  background: linear-gradient(135deg, #eef2ff, #f8f9ff);
+  border-radius: 20px;
+  padding: 2rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.flashcard .label {
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.flashcard .content {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.actions {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.actions .action-group {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.progress {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.progress-text {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  font-size: 1.05rem;
+}
+
+.progress-bar {
+  height: 12px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+#progress-fill {
+  background: var(--primary);
+  height: 100%;
+  width: 0;
+  transition: width 0.4s ease;
+}
+
+.word-list {
+  background: #f8fafc;
+  border-radius: 18px;
+  padding: 1.5rem;
+}
+
+.word-list h2 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+#word-list {
+  display: grid;
+  gap: 0.75rem;
+  list-style: none;
+}
+
+.word-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+}
+
+.word-item .info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.word-item .info span:first-child {
+  font-weight: 600;
+}
+
+.word-item .status {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.word-item.remembered {
+  border: 2px solid rgba(46, 204, 113, 0.4);
+  background: rgba(236, 253, 245, 0.8);
+}
+
+@media (max-width: 720px) {
+  .app-main {
+    width: min(100%, 100vw);
+    margin: -2rem 0 0 0;
+    padding: 1.75rem 1.5rem 3rem;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .flashcard {
+    padding: 1.5rem;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions .action-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  button,
+  select {
+    width: 100%;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f172a;
+    --card-bg: #111b32;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --shadow: rgba(15, 23, 42, 0.35);
+  }
+
+  .app-header {
+    box-shadow: 0 10px 25px rgba(107, 139, 255, 0.15);
+  }
+
+  .progress-bar {
+    background: rgba(148, 163, 184, 0.4);
+  }
+
+  .word-list {
+    background: rgba(15, 23, 42, 0.55);
+  }
+
+  .word-item {
+    background: rgba(15, 23, 42, 0.65);
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.3);
+  }
+}
