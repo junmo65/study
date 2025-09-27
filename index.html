@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>背单词小助手</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>背单词小助手</h1>
+    <p>结合艾宾浩斯遗忘曲线，科学规划考研与 GRE 词汇记忆</p>
+  </header>
+
+  <main class="app-main">
+    <section class="controls" aria-label="词库与复习控制">
+      <div class="control-group">
+        <label for="word-pack">词库：</label>
+        <select id="word-pack" aria-label="选择词库"></select>
+      </div>
+      <div class="control-group">
+        <button id="shuffle" class="secondary">随机重排</button>
+        <button id="reset-review" class="ghost" title="清除本词库的复习记录">重置复习数据</button>
+      </div>
+    </section>
+
+    <section class="mode-selector" aria-label="练习模式">
+      <button class="mode-button active" data-mode="flashcard">闪卡记忆</button>
+      <button class="mode-button" data-mode="spelling">拼写强化</button>
+      <button class="mode-button" data-mode="confusion">形近词辨析</button>
+    </section>
+
+    <section class="mode-panel" id="flashcard-panel" data-mode-panel="flashcard" aria-live="polite">
+      <div class="flashcard">
+        <div class="flashcard-front">
+          <p class="label">英文</p>
+          <p id="word" class="content">加载中...</p>
+          <p id="phonetic" class="phonetic"></p>
+        </div>
+        <div class="flashcard-back">
+          <p class="label">释义</p>
+          <p id="definition" class="content">点击“显示释义”查看</p>
+          <p id="example" class="example"></p>
+          <div id="confusion-hints" class="hints" aria-live="polite"></div>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="show-definition" class="primary">显示释义</button>
+        <div class="action-group">
+          <button id="mark-remembered" class="success">记住啦</button>
+          <button id="next-word" class="secondary">下一个</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="mode-panel" id="spelling-panel" data-mode-panel="spelling" hidden>
+      <header class="panel-header">
+        <h2>拼写强化</h2>
+        <p>根据释义和音标输入正确拼写，强化拼写肌肉记忆。</p>
+      </header>
+      <div class="prompt">
+        <p class="label">释义</p>
+        <p id="spelling-definition" class="content">选择词库后开始练习</p>
+        <p id="spelling-phonetic" class="phonetic"></p>
+      </div>
+      <div class="input-group">
+        <label for="spelling-input">请拼写该单词：</label>
+        <input id="spelling-input" type="text" autocomplete="off" spellcheck="false" />
+        <button id="spelling-check" class="primary">检查</button>
+      </div>
+      <p id="spelling-feedback" class="feedback" role="status"></p>
+      <button id="spelling-next" class="secondary">换一个</button>
+    </section>
+
+    <section class="mode-panel" id="confusion-panel" data-mode-panel="confusion" hidden>
+      <header class="panel-header">
+        <h2>形近词辨析</h2>
+        <p>在常见易混淆词之间做选择，掌握核心差异。</p>
+      </header>
+      <div class="prompt">
+        <p class="label">提示</p>
+        <p id="confusion-definition" class="content">选择词库后开始练习</p>
+        <p id="confusion-tip" class="tip"></p>
+      </div>
+      <div id="confusion-options" class="option-list" role="group" aria-label="形近词选项"></div>
+      <p id="confusion-feedback" class="feedback" role="status"></p>
+      <button id="confusion-next" class="secondary">下一题</button>
+    </section>
+
+    <section class="progress" aria-live="polite">
+      <div class="progress-text">
+        <span><strong id="progress-count">0</strong>/<span id="total-count">0</span> 已巩固</span>
+        <span id="due-count" class="due-count">0 个待复习</span>
+      </div>
+      <div class="progress-bar">
+        <div id="progress-fill" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+    </section>
+
+    <section class="review-plan">
+      <h2>艾宾浩斯复习安排</h2>
+      <p>按照 5 分钟、30 分钟、12 小时、1 天、2 天、4 天、7 天的节奏复习，最大化记忆保持率。</p>
+      <ul id="review-list" aria-live="polite"></ul>
+    </section>
+
+    <section class="word-list">
+      <h2>本次练习单词</h2>
+      <ul id="word-list"></ul>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>提示：坚持复习到“绿灯”全亮，再扩充下一个词库！</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
