@@ -1,0 +1,4 @@
+[
+  { "name": "考研词汇", "path": "data/kaoyan_words.csv" },
+  { "name": "GRE词汇", "path": "data/gre_words.csv" }
+]
