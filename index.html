@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>背单词小助手</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>背单词小助手</h1>
+    <p>通过卡片记忆方式高效掌握英语词汇</p>
+  </header>
+
+  <main class="app-main">
+    <section class="controls">
+      <label for="word-pack">词库：</label>
+      <select id="word-pack" aria-label="选择词库"></select>
+      <button id="shuffle" class="secondary">随机重排</button>
+    </section>
+
+    <section class="flashcard" aria-live="polite">
+      <div class="flashcard-front">
+        <p class="label">英文</p>
+        <p id="word" class="content">加载中...</p>
+      </div>
+      <div class="flashcard-back">
+        <p class="label">释义</p>
+        <p id="definition" class="content">点击“显示释义”查看</p>
+      </div>
+    </section>
+
+    <section class="actions">
+      <button id="show-definition" class="primary">显示释义</button>
+      <div class="action-group">
+        <button id="mark-remembered" class="success">记住啦</button>
+        <button id="next-word" class="secondary">下一个</button>
+      </div>
+    </section>
+
+    <section class="progress" aria-live="polite">
+      <div class="progress-text">
+        <span id="progress-count">0</span>/<span id="total-count">0</span>
+        <span class="progress-label">已掌握单词</span>
+      </div>
+      <div class="progress-bar">
+        <div id="progress-fill"></div>
+      </div>
+    </section>
+
+    <section class="word-list">
+      <h2>本次练习单词</h2>
+      <ul id="word-list"></ul>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>提示：每天坚持 10 分钟，词汇量突飞猛进！</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
