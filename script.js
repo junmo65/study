@@ -1,249 +1,112 @@
-const DEFAULT_WORD_PACKS = {
-  "考研词汇": [
+// ✅ 用你的 CSV 替换默认清单；保留常量名以兼容其他代码
+const CSV_PACK_MANIFEST_PATH = "data/wordpacks.json"; // 不再强依赖该文件
+const DEFAULT_CSV_PACKS = [
+  { name: "考研词汇", path: "data/kaoya_words.csv" } // 你的文件
+];
+
+
+function mapRowToEntry(row) {
+  // 你 CSV 的主释义（中文）与英英释义
+  const definitionCN = pickValue(row, [
+    "definitionChinese", "DefinitionChinese", "definition_cn", "definitionCN",
+    "释义", "中文释义", "definition", "Definition"
+  ]);
+  const definitionEN = pickValue(row, [
+    "definition-english", "definitionEnglish", "DefinitionEnglish", "英英释义"
+  ]);
+
+  const confusionSlots = [
     {
-      word: "ameliorate",
-      definition: "v. 改善；使好转",
-      phonetic: "əˈmiːliəreɪt",
-      example: "A well-structured review plan can ameliorate exam anxiety.",
-      exampleCN: "结构良好的复习计划可以缓解考试焦虑。",
-      confusions: [
-        { word: "deteriorate", definition: "v. 恶化；退化" },
-        { word: "alleviate", definition: "v. 缓解；减轻" },
-        { word: "mitigate", definition: "v. 缓和；减轻" }
-      ]
+      wordKeys: ["confusion1", "Confusion1", "形近词1", "近义词1"],
+      definitionKeys: ["confusion1Definition", "Confusion1Definition", "形近词释义1", "近义词释义1"]
     },
     {
-      word: "meticulous",
-      definition: "adj. 一丝不苟的；严谨的",
-      phonetic: "məˈtɪkjələs",
-      example: "She kept meticulous notes of every practice test.",
-      exampleCN: "她把每次模考的笔记都整理得一丝不苟。",
-      confusions: [
-        { word: "fastidious", definition: "adj. 挑剔的；极其注意细节的" },
-        { word: "scrupulous", definition: "adj. 严谨认真的；一丝不苟的" },
-        { word: "methodical", definition: "adj. 有条理的；井井有条的" }
-      ]
+      wordKeys: ["confusion2", "Confusion2", "形近词2", "近义词2"],
+      definitionKeys: ["confusion2Definition", "Confusion2Definition", "形近词释义2", "近义词释义2"]
     },
     {
-      word: "exacerbate",
-      definition: "v. 使恶化；使加剧",
-      phonetic: "ɪɡˈzæsəbeɪt",
-      example: "Skipping reviews will exacerbate the forgetting problem.",
-      exampleCN: "跳过复习会让遗忘问题更加严重。",
-      confusions: [
-        { word: "exasperate", definition: "v. 激怒；使恼怒" },
-        { word: "aggravate", definition: "v. 使加重；加剧" },
-        { word: "excavate", definition: "v. 挖掘；开凿" }
-      ]
-    },
-    {
-      word: "pragmatic",
-      definition: "adj. 务实的；讲求实际的",
-      phonetic: "præɡˈmætɪk",
-      example: "A pragmatic learner blends flashcards with writing practice.",
-      exampleCN: "务实的学习者会把闪卡与写作训练结合起来。",
-      confusions: [
-        { word: "dogmatic", definition: "adj. 教条的；武断的" },
-        { word: "programmatic", definition: "adj. 程序化的；规划性的" },
-        { word: "practicable", definition: "adj. 可行的；能实行的" }
-      ]
-    },
-    {
-      word: "delineate",
-      definition: "v. 描述；勾画轮廓",
-      phonetic: "dɪˈlɪnieɪt",
-      example: "The teacher delineated the key grammar points in detail.",
-      exampleCN: "老师把关键语法点讲解得清清楚楚。",
-      confusions: [
-        { word: "eliminate", definition: "v. 消除；淘汰" },
-        { word: "deliberate", definition: "v. 深思熟虑；adj. 故意的" },
-        { word: "alienate", definition: "v. 疏远；离间" }
-      ]
-    },
-    {
-      word: "ubiquitous",
-      definition: "adj. 无处不在的；普遍存在的",
-      phonetic: "juːˈbɪkwɪtəs",
-      example: "Mobile apps make ubiquitous learning possible.",
-      exampleCN: "移动应用让随时随地的学习成为可能。",
-      confusions: [
-        { word: "unique", definition: "adj. 独一无二的" },
-        { word: "oblivious", definition: "adj. 遗忘的；未察觉的" },
-        { word: "ambiguous", definition: "adj. 模棱两可的；含糊的" }
-      ]
-    },
-    {
-      word: "pertinent",
-      definition: "adj. 相关的；中肯的",
-      phonetic: "ˈpɜːrtɪnənt",
-      example: "Only pertinent examples are kept in the final notes.",
-      exampleCN: "最终的笔记里只保留最相关的例子。",
-      confusions: [
-        { word: "impertinent", definition: "adj. 无礼的；不相关的" },
-        { word: "penitent", definition: "adj. 忏悔的；悔过的" },
-        { word: "perturb", definition: "v. 使不安；扰乱" }
-      ]
-    },
-    {
-      word: "alleviate",
-      definition: "v. 缓解；减轻",
-      phonetic: "əˈliːvieɪt",
-      example: "Regular breaks can alleviate fatigue during revision.",
-      exampleCN: "定期休息能缓解复习时的疲劳。",
-      confusions: [
-        { word: "aggravate", definition: "v. 加重；恶化" },
-        { word: "elevate", definition: "v. 提升；举起" },
-        { word: "levitate", definition: "v. 升空；悬浮" }
-      ]
-    },
-    {
-      word: "galvanize",
-      definition: "v. 激励；通电镀锌",
-      phonetic: "ˈɡælvənaɪz",
-      example: "The looming exam date galvanized her to study harder.",
-      exampleCN: "临近的考试日期激励她更加努力学习。",
-      confusions: [
-        { word: "paralyze", definition: "v. 使瘫痪；使麻痹" },
-        { word: "vulcanize", definition: "v. 硫化；硫化处理" },
-        { word: "aggrandize", definition: "v. 扩张；夸大" }
-      ]
-    },
-    {
-      word: "consolidate",
-      definition: "v. 巩固；合并",
-      phonetic: "kənˈsɑːlɪdeɪt",
-      example: "Daily review consolidates long-term memory.",
-      exampleCN: "每天复习能巩固长期记忆。",
-      confusions: [
-        { word: "liquidate", definition: "v. 清算；变现" },
-        { word: "insulate", definition: "v. 使隔离；绝缘" },
-        { word: "consulate", definition: "n. 领事馆" }
-      ]
+      wordKeys: ["confusion3", "Confusion3", "形近词3", "近义词3"],
+      definitionKeys: ["confusion3Definition", "Confusion3Definition", "形近词释义3", "近义词释义3"]
     }
-  ],
-  "GRE词汇": [
-    {
-      word: "abrogate",
-      definition: "v. 废除；撤销",
-      phonetic: "ˈæbrəɡeɪt",
-      example: "The committee voted to abrogate the outdated rule.",
-      exampleCN: "委员会投票废除了那条过时的规定。",
-      confusions: [
-        { word: "arrogate", definition: "v. 冒称拥有；霸占" },
-        { word: "abdicate", definition: "v. 退位；放弃权力" },
-        { word: "aggregate", definition: "v. 聚合；总计" }
-      ]
-    },
-    {
-      word: "intransigent",
-      definition: "adj. 不妥协的；固执的",
-      phonetic: "ɪnˈtrænsɪdʒənt",
-      example: "The negotiator faced an intransigent opponent.",
-      exampleCN: "谈判者面对一个毫不妥协的对手。",
-      confusions: [
-        { word: "insurgent", definition: "n. 叛乱者；起义者" },
-        { word: "stringent", definition: "adj. 严格的；紧缩的" },
-        { word: "transient", definition: "adj. 短暂的；转瞬即逝的" }
-      ]
-    },
-    {
-      word: "proscribe",
-      definition: "v. 禁止；取缔",
-      phonetic: "proʊˈskraɪb",
-      example: "The policy proscribed the use of informal sources.",
-      exampleCN: "政策明令禁止使用非正式来源。",
-      confusions: [
-        { word: "prescribe", definition: "v. 开药方；规定" },
-        { word: "subscribe", definition: "v. 订阅；赞同" },
-        { word: "describe", definition: "v. 描述；形容" }
-      ]
-    },
-    {
-      word: "obviate",
-      definition: "v. 排除；使无必要",
-      phonetic: "ˈɑːbvieɪt",
-      example: "Consistent practice obviates last-minute cramming.",
-      exampleCN: "坚持练习能免去临时抱佛脚的需要。",
-      confusions: [
-        { word: "deviate", definition: "v. 偏离；背离" },
-        { word: "obligate", definition: "v. 强迫；使负义务" },
-        { word: "oblate", definition: "adj. 扁圆的；球形扁平的" }
-      ]
-    },
-    {
-      word: "ephemeral",
-      definition: "adj. 短暂的；转瞬即逝的",
-      phonetic: "ɪˈfemərəl",
-      example: "Ephemeral memory fades quickly without review.",
-      exampleCN: "短暂的记忆如果不复习很快就会消失。",
-      confusions: [
-        { word: "eternal", definition: "adj. 永恒的" },
-        { word: "ethereal", definition: "adj. 飘渺的；超凡的" },
-        { word: "empirical", definition: "adj. 经验主义的；以经验为依据的" }
-      ]
-    },
-    {
-      word: "vociferous",
-      definition: "adj. 喧哗的；大声疾呼的",
-      phonetic: "voʊˈsɪfərəs",
-      example: "Vociferous critics demanded a better syllabus.",
-      exampleCN: "喧闹的批评者要求一份更好的课程大纲。",
-      confusions: [
-        { word: "voracious", definition: "adj. 贪吃的；求知欲强的" },
-        { word: "ferocious", definition: "adj. 凶猛的；残暴的" },
-        { word: "loquacious", definition: "adj. 健谈的；话多的" }
-      ]
-    },
-    {
-      word: "recalcitrant",
-      definition: "adj. 桀骜不驯的；顽抗的",
-      phonetic: "rɪˈkælsɪtrənt",
-      example: "A recalcitrant habit resists sudden change.",
-      exampleCN: "顽固的习惯难以突然改变。",
-      confusions: [
-        { word: "reticent", definition: "adj. 寡言少语的；不愿透露的" },
-        { word: "recalibrate", definition: "v. 重新校准；重新调整" },
-        { word: "recreant", definition: "adj. 懦弱的；背信弃义的" }
-      ]
-    },
-    {
-      word: "pellucid",
-      definition: "adj. 清澈的；清晰易懂的",
-      phonetic: "pəˈluːsɪd",
-      example: "Her pellucid explanation clarified the theory.",
-      exampleCN: "她清晰的讲解让这条理论豁然开朗。",
-      confusions: [
-        { word: "recondite", definition: "adj. 深奥的；难懂的" },
-        { word: "translucent", definition: "adj. 半透明的" },
-        { word: "pelagic", definition: "adj. 海洋的；远洋的" }
-      ]
-    },
-    {
-      word: "sedulous",
-      definition: "adj. 勤奋的；刻苦的",
-      phonetic: "ˈsedʒələs",
-      example: "Sedulous effort eventually pays off in vocabulary building.",
-      exampleCN: "持之以恒的努力最终会在词汇学习上得到回报。",
-      confusions: [
-        { word: "seditious", definition: "adj. 煽动性的；闹革命的" },
-        { word: "sedentary", definition: "adj. 久坐不动的" },
-        { word: "seductive", definition: "adj. 诱惑的；迷人的" }
-      ]
-    },
-    {
-      word: "castigate",
-      definition: "v. 严厉批评；惩罚",
-      phonetic: "ˈkæstɪɡeɪt",
-      example: "The professor castigated plagiarism harshly.",
-      exampleCN: "教授对抄袭行为进行了严厉的斥责。",
-      confusions: [
-        { word: "extol", definition: "v. 赞美；颂扬" },
-        { word: "castrate", definition: "v. 阉割；阉除" },
-        { word: "investigate", definition: "v. 调查；研究" }
-      ]
+  ];
+
+  const confusions = confusionSlots
+    .map(({ wordKeys, definitionKeys }) => ({
+      word: pickValue(row, wordKeys),
+      definition: pickValue(row, definitionKeys)
+    }))
+    .filter((item) => item.word && item.definition);
+
+  return {
+    word: pickValue(row, ["word", "Word", "英文", "单词"]),
+    definition: definitionCN,          // ✅ 应用内使用的主释义 = 中文释义
+    definitionEN: definitionEN || "",  // 可选：英英释义，供你后续扩展
+    phonetic: pickValue(row, ["phonetic", "Phonetic", "音标"]),
+    example: pickValue(row, ["example", "Example", "例句"]),
+    exampleCN: pickValue(row, ["exampleCN", "ExampleCN", "例句释义", "例句中文"]),
+    confusions
+  };
+}
+function normalizeWordEntry(raw) {
+  const entry = {
+    word: pickValue(raw, ["word"]),
+    // ✅ 优先保留 mapRowToEntry 写入的中文释义；也兼容其他命名
+    definition: pickValue(raw, ["definition", "definitionChinese", "definitionCN", "definition_cn"]),
+    definitionEN: pickValue(raw, ["definitionEN", "definition-english", "definitionEnglish"]) || "",
+    phonetic: pickValue(raw, ["phonetic"]),
+    example: pickValue(raw, ["example"]),
+    exampleCN: pickValue(raw, ["exampleCN", "exampleCn", "example_cn"])
+  };
+  if (Array.isArray(raw.confusions)) {
+    entry.confusions = raw.confusions
+      .map((item) => ({ word: pickValue(item, ["word"]), definition: pickValue(item, ["definition"]) }))
+      .filter((item) => item.word && item.definition);
+  } else {
+    entry.confusions = [];
+  }
+  return entry;
+}
+async function loadWordPacksFromCsv() {
+  if (typeof window === "undefined") return;
+
+  const canFetch = window.location?.protocol !== "file:";
+  const fallbackPacks = enrichWordPackMap(cloneDefaultWordPacks()); // 仅作失败兜底
+
+  if (!canFetch) {
+    showFeedback("当前以 file:// 打开，浏览器无法读取 data/ 下的 CSV。建议用本地 HTTP 服务器（如 VSCode Live Server）。已临时使用内置示例词库。", "info");
+    state.wordPacks = fallbackPacks;
+    return;
+  }
+
+  // ✅ 明确只读你放的 CSV；若拼写有误，兜底尝试原来的 kaoyan 拼法
+  const tryPaths = ["data/kaoya_words.csv", "data/kaoyan_words.csv"];
+  let loaded = false;
+  const packs = {};
+
+  for (const path of tryPaths) {
+    try {
+      const resp = await fetch(path, { cache: "no-store" });
+      if (!resp.ok) continue;
+      const text = await resp.text();
+      const rows = parseCsv(text);
+      const entries = rows.map((row) => mapRowToEntry(row)).filter((e) => e.word && e.definition);
+      if (entries.length) {
+        packs["考研词汇"] = entries;                 // ✅ 只有这一个包：考研词汇
+        state.wordPacks = enrichWordPackMap(packs);  // 生成 confusions，清洗字段
+        showFeedback(`已从「${path}」载入 ${entries.length} 个单词。`, "success");
+        loaded = true;
+        break;
+      }
+    } catch (err) {
+      // 尝试下一个路径
     }
-  ]
-};
+  }
+
+  if (!loaded) {
+    showFeedback("未能加载 data/kaoya_words.csv（或 kaoyan_words.csv），已回退到内置示例词库。", "warning");
+    state.wordPacks = fallbackPacks;
+  }
+}
 
 
 const CSV_PACK_MANIFEST_PATH = "data/wordpacks.json";
