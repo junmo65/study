@@ -3,116 +3,72 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>背单词小助手</title>
+  <title>PDF OCR 与清晰增强工具</title>
   <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.min.js" integrity="sha512-pP5nGthlCYcNTmAU8Go+8Nb9C/tuQCKJ3zm1OiUWRHeMMlcYLTHQi7BapYhBnVw8VrwDJ6UQnIW0EK8oBmUjOg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.worker.min.js" integrity="sha512-ZTQvr93Il59N+JGF0E3c1xfr7x0gEsx2zd71sPrcE1TVMVpSviQcFVjpi2lbY88dLChhpiZgfZzup6TkcTi6HA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.3/tesseract.min.js" integrity="sha512-o+nKX2aTty3H2zgpVfYdYK8qDvU/1cyAxW1NVcUshwsDHmFMCX+Hy8buRNiKpcDI39g2yXb9M1N6BbyjDyPHaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js" integrity="sha512-92T2N3gb8ZEDJ8DdkdGeXYWAA0G6+WFUecVpyqwmePq2Faaelttzpg2b5rZeRT2TpJ7Ka5jqrZefVSxtmLDo6g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
   <header class="app-header">
-    <h1>背单词小助手</h1>
-    <p>结合艾宾浩斯遗忘曲线，科学规划考研与 GRE 词汇记忆</p>
+    <div>
+      <h1>PDF OCR 与清晰增强工具</h1>
+      <p>上传 PDF，提取文字并增强页面清晰度，助力资料整理。</p>
+    </div>
+    <label class="upload-button" for="file-input">上传 PDF</label>
+    <input type="file" id="file-input" accept="application/pdf" hidden />
   </header>
 
   <main class="app-main">
-    <section class="controls" aria-label="词库与复习控制">
-      <div class="control-group">
-        <label for="word-pack">词库：</label>
-        <select id="word-pack" aria-label="选择词库"></select>
+    <section class="preview-panel" aria-label="PDF 预览">
+      <div class="canvas-container">
+        <canvas id="pdf-canvas" aria-label="PDF 页面预览"></canvas>
       </div>
-      <div class="control-group">
-        <button id="shuffle" class="secondary">随机重排</button>
-        <button id="reset-review" class="ghost" title="清除本词库的复习记录">重置复习数据</button>
+      <div class="page-controls">
+        <button id="prev-page" class="ghost" disabled>上一页</button>
+        <span id="page-info" aria-live="polite">未加载</span>
+        <button id="next-page" class="ghost" disabled>下一页</button>
       </div>
-    </section>
-
-    <section class="mode-selector" aria-label="练习模式">
-      <button class="mode-button active" data-mode="flashcard">闪卡记忆</button>
-      <button class="mode-button" data-mode="spelling">拼写强化</button>
-      <button class="mode-button" data-mode="confusion">形近词辨析</button>
-    </section>
-
-    <section class="mode-panel" id="flashcard-panel" data-mode-panel="flashcard" aria-live="polite">
-      <div class="flashcard">
-        <div class="flashcard-front">
-          <p class="label">英文</p>
-          <p id="word" class="content">加载中...</p>
-          <p id="phonetic" class="phonetic"></p>
+      <div class="enhance-controls" aria-label="清晰度调节">
+        <h2>清晰度增强</h2>
+        <div class="slider-group">
+          <label for="brightness">亮度 <span id="brightness-value">0</span></label>
+          <input type="range" id="brightness" min="-50" max="50" value="0" />
         </div>
-        <div class="flashcard-back">
-          <p class="label">释义</p>
-          <p id="definition" class="content">点击“显示释义”查看</p>
-          <p id="example" class="example"></p>
-          <div id="confusion-hints" class="hints" aria-live="polite"></div>
+        <div class="slider-group">
+          <label for="contrast">对比度 <span id="contrast-value">0</span></label>
+          <input type="range" id="contrast" min="-50" max="50" value="0" />
         </div>
-      </div>
-      <div class="actions">
-        <button id="show-definition" class="primary">显示释义</button>
-        <div class="action-group">
-          <button id="mark-remembered" class="success">记住啦</button>
-          <button id="next-word" class="secondary">下一个</button>
+        <div class="checkbox-group">
+          <input type="checkbox" id="sharpen" />
+          <label for="sharpen">启用锐化</label>
         </div>
+        <button id="reset-enhance" class="secondary">重置参数</button>
       </div>
+      <button id="run-ocr" class="primary" disabled>开始 OCR 识别</button>
     </section>
 
-    <section class="mode-panel" id="spelling-panel" data-mode-panel="spelling" hidden>
-      <header class="panel-header">
-        <h2>拼写强化</h2>
-        <p>根据释义和音标输入正确拼写，强化拼写肌肉记忆。</p>
-      </header>
-      <div class="prompt">
-        <p class="label">释义</p>
-        <p id="spelling-definition" class="content">选择词库后开始练习</p>
-        <p id="spelling-phonetic" class="phonetic"></p>
+    <section class="side-panel" aria-label="分析结果">
+      <div class="result-panel" aria-label="识别结果">
+        <h2>识别文字</h2>
+        <div id="ocr-status" class="status" aria-live="polite">等待上传 PDF...</div>
+        <pre id="ocr-result" tabindex="0"></pre>
       </div>
-      <div class="input-group">
-        <label for="spelling-input">请拼写该单词：</label>
-        <input id="spelling-input" type="text" autocomplete="off" spellcheck="false" />
-        <button id="spelling-check" class="primary">检查</button>
-      </div>
-      <p id="spelling-feedback" class="feedback" role="status"></p>
-      <button id="spelling-next" class="secondary">换一个</button>
-    </section>
 
-    <section class="mode-panel" id="confusion-panel" data-mode-panel="confusion" hidden>
-      <header class="panel-header">
-        <h2>形近词辨析</h2>
-        <p>在常见易混淆词之间做选择，掌握核心差异。</p>
-      </header>
-      <div class="prompt">
-        <p class="label">提示</p>
-        <p id="confusion-definition" class="content">选择词库后开始练习</p>
-        <p id="confusion-tip" class="tip"></p>
+      <div class="toc-panel" aria-label="自动目录">
+        <h2>自动目录</h2>
+        <p id="toc-status" class="status">等待上传 PDF...</p>
+        <ol id="toc-list"></ol>
+        <button id="download-toc" class="primary" disabled>下载含目录 PDF</button>
       </div>
-      <div id="confusion-options" class="option-list" role="group" aria-label="形近词选项"></div>
-      <p id="confusion-feedback" class="feedback" role="status"></p>
-      <button id="confusion-next" class="secondary">下一题</button>
-    </section>
-
-    <section class="progress" aria-live="polite">
-      <div class="progress-text">
-        <span><strong id="progress-count">0</strong>/<span id="total-count">0</span> 已巩固</span>
-        <span id="due-count" class="due-count">0 个待复习</span>
-      </div>
-      <div class="progress-bar">
-        <div id="progress-fill" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-      </div>
-    </section>
-
-    <section class="review-plan">
-      <h2>艾宾浩斯复习安排</h2>
-      <p>按照 5 分钟、30 分钟、12 小时、1 天、2 天、4 天、7 天的节奏复习，最大化记忆保持率。</p>
-      <ul id="review-list" aria-live="polite"></ul>
-    </section>
-
-    <section class="word-list">
-      <h2>本次练习单词</h2>
-      <ul id="word-list"></ul>
     </section>
   </main>
 
   <footer class="app-footer">
-    <p>提示：坚持复习到“绿灯”全亮，再扩充下一个词库！</p>
+    <p>提示：调整亮度和对比度后再执行 OCR，可获得更清晰的结果。</p>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js" type="module"></script>
 </body>
 </html>
