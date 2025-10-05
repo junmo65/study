@@ -1,74 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PDF OCR 与清晰增强工具</title>
-  <link rel="stylesheet" href="styles.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.min.js" integrity="sha512-pP5nGthlCYcNTmAU8Go+8Nb9C/tuQCKJ3zm1OiUWRHeMMlcYLTHQi7BapYhBnVw8VrwDJ6UQnIW0EK8oBmUjOg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.worker.min.js" integrity="sha512-ZTQvr93Il59N+JGF0E3c1xfr7x0gEsx2zd71sPrcE1TVMVpSviQcFVjpi2lbY88dLChhpiZgfZzup6TkcTi6HA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.3/tesseract.min.js" integrity="sha512-o+nKX2aTty3H2zgpVfYdYK8qDvU/1cyAxW1NVcUshwsDHmFMCX+Hy8buRNiKpcDI39g2yXb9M1N6BbyjDyPHaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js" integrity="sha512-92T2N3gb8ZEDJ8DdkdGeXYWAA0G6+WFUecVpyqwmePq2Faaelttzpg2b5rZeRT2TpJ7Ka5jqrZefVSxtmLDo6g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-</head>
-<body>
-  <header class="app-header">
-    <div>
-      <h1>PDF OCR 与清晰增强工具</h1>
-      <p>上传 PDF，提取文字并增强页面清晰度，助力资料整理。</p>
-    </div>
-    <label class="upload-button" for="file-input">上传 PDF</label>
-    <input type="file" id="file-input" accept="application/pdf" hidden />
-  </header>
-
-  <main class="app-main">
-    <section class="preview-panel" aria-label="PDF 预览">
-      <div class="canvas-container">
-        <canvas id="pdf-canvas" aria-label="PDF 页面预览"></canvas>
-      </div>
-      <div class="page-controls">
-        <button id="prev-page" class="ghost" disabled>上一页</button>
-        <span id="page-info" aria-live="polite">未加载</span>
-        <button id="next-page" class="ghost" disabled>下一页</button>
-      </div>
-      <div class="enhance-controls" aria-label="清晰度调节">
-        <h2>清晰度增强</h2>
-        <div class="slider-group">
-          <label for="brightness">亮度 <span id="brightness-value">0</span></label>
-          <input type="range" id="brightness" min="-50" max="50" value="0" />
-        </div>
-        <div class="slider-group">
-          <label for="contrast">对比度 <span id="contrast-value">0</span></label>
-          <input type="range" id="contrast" min="-50" max="50" value="0" />
-        </div>
-        <div class="checkbox-group">
-          <input type="checkbox" id="sharpen" />
-          <label for="sharpen">启用锐化</label>
-        </div>
-        <button id="reset-enhance" class="secondary">重置参数</button>
-      </div>
-      <button id="run-ocr" class="primary" disabled>开始 OCR 识别</button>
-    </section>
-
-    <section class="side-panel" aria-label="分析结果">
-      <div class="result-panel" aria-label="识别结果">
-        <h2>识别文字</h2>
-        <div id="ocr-status" class="status" aria-live="polite">等待上传 PDF...</div>
-        <pre id="ocr-result" tabindex="0"></pre>
-      </div>
-
-      <div class="toc-panel" aria-label="自动目录">
-        <h2>自动目录</h2>
-        <p id="toc-status" class="status">等待上传 PDF...</p>
-        <ol id="toc-list"></ol>
-        <button id="download-toc" class="primary" disabled>下载含目录 PDF</button>
-      </div>
-    </section>
-  </main>
-
-  <footer class="app-footer">
-    <p>提示：调整亮度和对比度后再执行 OCR，可获得更清晰的结果。</p>
-  </footer>
-
-  <script src="script.js" type="module"></script>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Orpea Vocab Coach</title>
+  </head>
+  <body class="bg-neutral text-slate-900">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
