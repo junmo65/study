@@ -1,0 +1,290 @@
+:root {
+  color-scheme: light;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f7f7f8;
+  color: #1d1d1f;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  background: #ffffffcc;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #e1e1e3;
+  padding: 0.5rem 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+header h1 {
+  font-size: 1.25rem;
+  margin: 0;
+  flex: 1 1 auto;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+nav a {
+  text-decoration: none;
+  color: #1d1d1f;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.4rem;
+  background: #f0f0f2;
+  border: 1px solid transparent;
+}
+
+nav a:hover,
+nav a:focus {
+  border-color: #b0b0c0;
+  outline: none;
+}
+
+main#app {
+  flex: 1 1 auto;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+footer {
+  padding: 0.75rem 1.5rem;
+  border-top: 1px solid #e1e1e3;
+  font-size: 0.85rem;
+  background: #ffffffcc;
+}
+
+section {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.grid.two {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.metric {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: inset 0 0 0 1px #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.metric-title {
+  font-size: 0.85rem;
+  color: #4b5563;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  padding: 0.45rem 0.65rem;
+  border-radius: 0.5rem;
+  border: 1px solid #c8c8d0;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+button {
+  cursor: pointer;
+  background: #2563eb;
+  color: white;
+  border: 1px solid #1d4ed8;
+}
+
+button.secondary {
+  background: #f3f4f6;
+  color: #111827;
+  border-color: #d1d5db;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1rem 0.45rem;
+  background: #e0e7ff;
+  color: #1e3a8a;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  margin-right: 0.35rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: 0.6rem;
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  color: #92400e;
+}
+
+.bar-chart {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-end;
+  height: 120px;
+}
+
+.bar {
+  flex: 1;
+  background: linear-gradient(180deg, #60a5fa, #2563eb);
+  border-radius: 0.4rem 0.4rem 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  color: white;
+  font-size: 0.75rem;
+  padding-bottom: 0.35rem;
+}
+
+.learn-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.learn-card .prompt {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.learn-card .meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+.learn-card .flip {
+  background: #f3f4f6;
+  padding: 1rem;
+  border-radius: 0.6rem;
+  display: none;
+}
+
+.learn-card.show-answer .flip {
+  display: block;
+}
+
+.learn-card .grade-buttons {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.learn-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.options {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.learn-card .grade-buttons button {
+  background: #dbeafe;
+  color: #1e3a8a;
+  border-color: #bfdbfe;
+}
+
+.learn-card .grade-buttons button.danger {
+  background: #fee2e2;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.key-hints {
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+.tag-cloud span {
+  margin-right: 0.5rem;
+  font-size: 0.85rem;
+}
+
+label span.missing {
+  color: #b45309;
+}
+
+@media (max-width: 720px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  nav {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media print {
+  body {
+    background: white;
+    color: #000;
+  }
+
+  header,
+  footer,
+  nav,
+  .no-print {
+    display: none !important;
+  }
+
+  main#app {
+    padding: 0;
+  }
+
+  section {
+    box-shadow: none;
+    border: none;
+    padding: 0;
+  }
+}
