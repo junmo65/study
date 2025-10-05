@@ -1,17 +1,35 @@
-# PDF OCR 与清晰增强工具
+# Orpea Vocab Coach – Local Minimal
 
-一个纯前端的工具页面，支持上传 PDF 文档、调节页面亮度/对比度并进行锐化处理，以便获取更清晰的图像，再通过 OCR（Tesseract.js）提取文字内容。
+This is a zero-dependency single page application for spaced vocabulary study.
 
-## 功能特性
-- 支持 PDF 多页预览与翻页，即便是接近 300 MB 的大型文件也可在浏览器端直接处理。
-- 亮度、对比度滑块以及锐化开关，可实时增强页面清晰度。
-- 自动扫描标题生成目录，并可导出带目录的全新 PDF。
-- 一键启动 OCR，自动识别中文与英文文本。
-- 所有处理均在浏览器本地完成，文档不会上传到服务器。
+## Usage
 
-## 使用方式
-1. 打开 `index.html`。
-2. 点击“上传 PDF”选择文件；对于较大的 PDF（>150 MB），加载和目录分析可能需要更长时间，页面会提示进度。
-3. 根据需求调整清晰度参数。
-4. 等待系统自动生成目录预览，如需导出，点击“下载含目录 PDF”。
-5. 点击“开始 OCR 识别”查看识别结果。
+1. Download the folder and double-click `index.html` to open it in Edge (or any modern browser). The app runs entirely offline via the `file://` protocol.
+2. Use the navigation links at the top to import vocabulary cards, review them, and manage your collection.
+
+## Features
+
+- CSV/TSV importer with preview, automatic delimiter detection, column mapping, and duplicate resolution.
+- Spaced repetition scheduling with SM-2 (default) or Leitner boxes.
+- Multiple practice modes: Recognition, Recall, Collocation (choice and fill), Cloze.
+- Keyboard-friendly learning workspace with grading shortcuts (1-5, space to flip/submit, C to switch mode, F to flag, `/` to focus input).
+- Dashboard analytics including today’s workload, success rate, 7-day due chart, and difficult tags.
+- Backup and restore via JSON export/import, plus review history CSV export.
+- Pure text assets: no build, no bundler, no external fonts or scripts.
+
+## Files
+
+- `index.html` – main entry point with navigation and hash router mount.
+- `style.css` – light theme styling and print-specific rules.
+- `app.js` – bootstraps storage, routing, and page rendering.
+- `csv.js` – lightweight CSV/TSV parser.
+- `storage.js` – localStorage persistence helpers and backup utilities.
+- `sm2.js` – implementation of the SM-2 algorithm with tweaks.
+- `leitner.js` – Leitner box scheduling logic.
+- `scheduler.js` – session queue builder and review logging.
+- `levenshtein.js` – edit distance function for forgiving input checking.
+- `components.js` – question component factory functions.
+- `pages.js` – page-level renderers for dashboard, learn, import, cards, settings, backup, and print views.
+- `util.js` – common utilities for time formatting, DOM helpers, and routing.
+
+Everything is written using native ES modules and localStorage; data never leaves the browser.
